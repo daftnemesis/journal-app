@@ -2,6 +2,8 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Button, Grid, Link, TextField, Typography } from '@mui/material';
 import { AuthLayout } from '../layout/AuthLayout';
 import { useForm } from '../../hooks';
+import { useDispatch } from 'react-redux';
+import { startCreatingUserWithEmailPassword } from '../../store/auth';
 
 const formData = {
   email: 'user@google.com',
@@ -9,13 +11,27 @@ const formData = {
   displayName: 'User'
 }
 
+const formValidations = {
+  email: [ (value) => value.includes('@'), 'El correo debe de contener @' ],
+  password: [ (value) => value.length >= 6, 'La constrasena debe de contener al menos 6 caracteres' ],
+  displayName: [ (value) => value.length >= 1, 'El nombre es obligatorio' ],
+}
+
 export const RegisterPage = () => {
 
-  const { displayName, email, password, onInputChange, formState } = useForm(formData)
+  const dispatch = useDispatch();
+
+  const { 
+    displayName, email, password, onInputChange, formState,
+    displayNameValid, emailValid, passwordValid, formValid
+  } = useForm(formData, formValidations)
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(formState)
+
+    if( !!formValid ) return;
+
+    dispatch(startCreatingUserWithEmailPassword(formState))
   }
 
   return (
@@ -32,6 +48,8 @@ export const RegisterPage = () => {
               name='displayName'
               value={displayName}
               onChange={onInputChange}
+              error={!!displayNameValid}
+              helperText={displayNameValid}
             />
           </Grid>
 
@@ -44,6 +62,8 @@ export const RegisterPage = () => {
               name='email'
               value={email}
               onChange={onInputChange}
+              error={!!emailValid}
+              helperText={emailValid}
             />
           </Grid>
 
@@ -56,6 +76,8 @@ export const RegisterPage = () => {
               name='password'
               value={password}
               onChange={onInputChange}
+              error={!!passwordValid}
+              helperText={passwordValid}
             />
           </Grid>
 
