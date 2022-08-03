@@ -44,13 +44,11 @@ export const registerUserWithEmailPassword = async({email, password, displayName
     }
     
   } catch (error) {
-    const errorCode = error.code;
-    const errorMessage = error.message;
     console.log(error)
 
     return {
       ok: false,
-      errorMessage,
+      errorMessage: error.message
     }
   }
     

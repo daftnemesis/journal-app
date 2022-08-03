@@ -36,7 +36,7 @@ export const RegisterPage = () => {
     e.preventDefault();
     setFormSubmitted(true);
 
-    if( !formValid ) return;
+    if( !!formValid ) return;
 
     dispatch(startCreatingUserWithEmailPassword(formState))
   }
