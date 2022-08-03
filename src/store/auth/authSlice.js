@@ -31,12 +31,12 @@ const authSlice = createSlice({
       state.photoURL = null;
       state.errorMessage = payload.errorMessage;
     },
-    chechingCredentials: (state) => {
+    checkingCredentials: (state) => {
       state.status = 'checking'
     }
   }
 });
 
-export const { login, logout, chechingCredentials } = authSlice.actions
+export const { login, logout, checkingCredentials } = authSlice.actions
 
 export default authSlice.reducer

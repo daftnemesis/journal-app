@@ -1,14 +1,15 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Button, Grid, Link, TextField, Typography } from '@mui/material';
+import { Alert, Button, Grid, Link, TextField, Typography } from '@mui/material';
 import { AuthLayout } from '../layout/AuthLayout';
 import { useForm } from '../../hooks';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { startCreatingUserWithEmailPassword } from '../../store/auth';
+import { useMemo, useState } from 'react';
 
 const formData = {
-  email: 'user@google.com',
-  password: '123456',
-  displayName: 'User'
+  email: '',
+  password: '',
+  displayName: ''
 }
 
 const formValidations = {
@@ -20,6 +21,11 @@ const formValidations = {
 export const RegisterPage = () => {
 
   const dispatch = useDispatch();
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
+  const { status, errorMessage } = useSelector( state => state.auth );
+
+  const isCheckingAutentication = useMemo( () => status === 'checking', [status] )
 
   const { 
     displayName, email, password, onInputChange, formState,
@@ -28,8 +34,9 @@ export const RegisterPage = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    setFormSubmitted(true);
 
-    if( !!formValid ) return;
+    if( !formValid ) return;
 
     dispatch(startCreatingUserWithEmailPassword(formState))
   }
@@ -48,7 +55,7 @@ export const RegisterPage = () => {
               name='displayName'
               value={displayName}
               onChange={onInputChange}
-              error={!!displayNameValid}
+              error={!!displayNameValid && formSubmitted}
               helperText={displayNameValid}
             />
           </Grid>
@@ -62,7 +69,7 @@ export const RegisterPage = () => {
               name='email'
               value={email}
               onChange={onInputChange}
-              error={!!emailValid}
+              error={!!emailValid && formSubmitted}
               helperText={emailValid}
             />
           </Grid>
@@ -76,14 +83,19 @@ export const RegisterPage = () => {
               name='password'
               value={password}
               onChange={onInputChange}
-              error={!!passwordValid}
+              error={!!passwordValid && formSubmitted}
               helperText={passwordValid}
             />
           </Grid>
 
           <Grid container spacing={2} sx={{ mt: 1, mb: 2 }}>
+
+            <Grid item xs={12} display={!!errorMessage ? '' : 'none'}>
+              <Alert severity="error">{errorMessage}</Alert>
+            </Grid>
+
             <Grid item xs={12}>
-              <Button type='submit' variant="contained" fullWidth>
+              <Button type='submit' variant="contained" fullWidth disabled={isCheckingAutentication}>
                 Crear cuenta
               </Button>
             </Grid>
