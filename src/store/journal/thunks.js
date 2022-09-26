@@ -1,6 +1,6 @@
 import { collection, doc, setDoc } from 'firebase/firestore/lite'
 import { FirebaseDB } from '../../firebase/config'
-import { addNewEmptyNote, savingNewNote, setActiveNote } from './journalSlice'
+import { addNewEmptyNote, savingNewNote, setActiveNote, setNotes } from './journalSlice'
 import { loadNotes } from '../../helpers'
 
 
@@ -38,6 +38,7 @@ export const startLoadingNotes = () => {
   return async(dispatch, getState) => {
     const {uid} = getState().auth;
 
-    await loadNotes(uid)
+    const notes = await loadNotes(uid)
+    dispatch(setNotes(notes))
   }
 }
