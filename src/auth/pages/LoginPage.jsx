@@ -8,7 +8,7 @@ import { startGoogleSignIn, startLoginWithEmailPassword } from '../../store/auth
 import { useMemo } from 'react';
 
 
-const formDate = {
+const formData = {
   email: '',
   password: '',
 }
@@ -19,7 +19,7 @@ export const LoginPage = () => {
 
   const dispatch = useDispatch();
 
-  const { email, password, onInputChange } = useForm(formDate)
+  const { email, password, onInputChange } = useForm(formData)
 
   const isAuthenticated = useMemo(() => status === 'checking', [status])
 
